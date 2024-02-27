@@ -1,0 +1,137 @@
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[project]
+name = "my-sandbox-lib-suite"
+description = 'My sandbox library suite'
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "ISC" }
+keywords = []
+authors = []
+classifiers = [
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.10",
+]
+dependencies = [
+  "my-sandbox-lib @ {root:parent:uri}/my-sandbox-lib",
+  "my-sandbox-lib-addon @ {root:parent:uri}/my-sandbox-lib-addon",
+]
+dynamic = ["version"]
+
+[project.urls]
+Documentation = "https://github.com/manuel-koch/hatch-monorepo-sandbox"
+Source = "https://github.com/manuel-koch/hatch-monorepo-sandbox"
+Issues = ""
+
+[tool.hatch.metadata]
+allow-direct-references = true  # to be able to use the direct dependecies above
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.version.raw-options]
+root = ".."
+
+[tool.hatch.build.hooks.vcs]
+version-file = "../src/_version.py"
+
+[tool.hatch.build.targets.wheel]
+
+[tool.hatch.envs.default]
+dependencies = [
+  "pytest",
+  "pytest-cov",
+  "black",
+  "isort",
+  "pipdeptree",
+  "parameterized~=0.8",
+  "pylint~=3.0",
+]
+
+[tool.hatch.envs.default.scripts]
+cov = "pytest -c pytest.ini --verbose --capture=no --cov-report=term-missing --cov-config=pyproject.toml --cov=my_sandbox_lib --cov=my_sandbox_lib_addon --cov=tests --junitxml=../test-reports/{env:HATCH_ENV_ACTIVE}/results.xml"
+no-cov = "cov --no-cov"
+format = [
+  "isort .",
+  "black .",
+]
+lint = "mkdir -p ../test-reports ; pylint -j 0 --reports=yes --output-format=text:../test-reports/pylint-results.txt,colorized my_sandbox_lib my_sandbox_lib_addon tests"
+
+[[tool.hatch.envs.test.matrix]]
+python = [
+  "310"
+]
+
+[tool.isort]
+profile = "black"
+
+[tool.black]
+verbose = true
+line-length = 99
+target-version = ["py310"]
+include = '\.pyi?$'
+exclude = '''
+(
+  /(
+      # exclude a few common directories in the root of the project
+      \.idea
+    | \.git
+  )
+)
+'''
+
+[tool.coverage.run]
+branch = true
+parallel = true
+data_file = "../test-reports/.coverage"
+omit = [
+  "_version.py",
+  "my_sandbox_lib/_version.py",
+  "my_sandbox_lib_addon/_version.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+]
+[tool.pylint]
+ignore-paths = [
+  "_version.py",
+  "my_sandbox_lib/_version.py",
+  "my_sandbox_lib_addon/_version.py",
+]
+[tool.pylint.basic]
+# Good variable names which should always be accepted, separated by a comma.
+good-names = ["i", "j", "k", "x", "y", "z", "ex", "_", "id", "on"]
+[tool.pylint."messages control"]
+# Disable the message, report, category or checker with the given id(s). You can
+# either give multiple identifiers separated by comma (,) or put this option
+# multiple times (only on the command line, not in the configuration file where
+# it should appear only once). You can also use "--disable=all" to disable
+# everything first and then re-enable specific checks. For example, if you want
+# to run only the similarities checker, you can use "--disable=all
+# --enable=similarities". If you want to run only the classes checker, but have
+# no Warning level messages displayed, use "--disable=all --enable=classes
+# --disable=W".
+enable = [
+  # warn about (now) useless suppressions, that may had intended effect in the past
+  "useless-suppression",
+]
+disable = [
+  # the following are disabled by default
+  "raw-checker-failed", "bad-inline-option", "locally-disabled", "file-ignored",
+  "suppressed-message", "useless-suppression", "deprecated-pragma", "use-symbolic-message-instead",
+  "missing-module-docstring", "missing-function-docstring", "missing-class-docstring",
+  # don't care about lazy logging argument evaluation
+  "logging-fstring-interpolation",
+  # things we just ignore
+  "too-few-public-methods", "no-name-in-module", "attribute-defined-outside-init",
+  "too-many-arguments", "too-many-statements", "too-many-instance-attributes", "too-many-locals",
+  "redundant-unittest-assert", "broad-exception-raised",
+  # black will take care of formatting
+  "line-too-long",
+]
