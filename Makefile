@@ -5,7 +5,7 @@ build_lib_addon_package::
 	cd my-sandbox-lib-addon && hatch build
 
 clean_build_artifacts::
-	rm -f dist/*
+	rm -rf dist/*
 
 build:: clean_build_artifacts build_lib_package build_lib_addon_package
 
