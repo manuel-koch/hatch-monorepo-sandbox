@@ -27,5 +27,8 @@ my-sandbox-tool = "my_sandbox_tool.cli:main"
 Documentation = "https://github.com/manuel-koch/hatch-monorepo-sandbox"
 Source = "https://github.com/manuel-koch/hatch-monorepo-sandbox"
 
+[tool.hatch.build]
+directory = "../dist"
+
 [tool.hatch.build.targets.sdist]
 [tool.hatch.build.targets.wheel]
