@@ -14,6 +14,12 @@ build_and_publish:: build
 
 install_deps::
 	cd src \
+	&& pip cache remove my-sandbox-lib \
+	&& pip cache remove my_sandbox_lib \
+	&& pip cache remove my-sandbox-lib-addon \
+	&& pip cache remove my_sandbox_lib_addon \
+	&& pip cache remove my-sandbox-lib-suite \
+	&& pip cache remove my_sandbox_lib_suite \
     && hatch --verbose env create \
     && hatch run -- python -c 'import sys; import platform; print(f"Setup python {{platform.python_version()}} environment done: {{sys.executable}}")'
 
