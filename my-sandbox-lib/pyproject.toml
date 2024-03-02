@@ -21,7 +21,7 @@ dynamic = ["version"]
 
 [project.urls]
 Documentation = "https://github.com/manuel-koch/hatch-monorepo-sandbox"
-Source = "https://github.com/manuel-koch/hatch-monorepo-sandbox"
+Source = "https://github.com/manuel-koch/hatch-monorepo-sandbox/tree/main/src/my_sandbox_lib"
 
 [tool.hatch.version]
 source = "vcs"
